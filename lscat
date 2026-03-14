@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Cores
+VERDE='\033[0;92m'
+RESET='\033[0m'
+
+for arquivo in *; do
+    if [ -f "$arquivo" ] && [ "$arquivo" != "$0" ]; then
+        
+        if file "$arquivo" | grep -q "text"; then
+            
+            LARGURA=$(tput cols)
+            
+            printf "${VERDE}%.s-${RESET}" $(seq 1 "$LARGURA")
+            echo -e "\n${VERDE}\033[1m$arquivo${RESET}"
+            printf "${VERDE}%.s-${RESET}" $(seq 1 "$LARGURA")
+            echo -e "\n"
+
+            cat "$arquivo"
+            echo -e "\n\n"
+        else
+            echo -e "${VERDE}[PULADO]${RESET} $arquivo (arquivo binário/não-texto)"
+        fi
+    fi
+done
