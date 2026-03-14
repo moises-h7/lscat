@@ -2,7 +2,11 @@
 
 # Cores
 VERDE='\033[0;92m'
+AMARELO='\033[1;33m'
 RESET='\033[0m'
+
+# Limite de linhas por arquivo
+LIMITE=50
 
 for arquivo in *; do
     if [ -f "$arquivo" ] && [ "$arquivo" != "$0" ]; then
@@ -16,7 +20,17 @@ for arquivo in *; do
             printf "${VERDE}%.s-${RESET}" $(seq 1 "$LARGURA")
             echo -e "\n"
 
-            cat "$arquivo"
+            # Conta a quantidade de linhas em um arquivo
+            LINHAS=$(wc -l < "$arquivo")
+
+            # Verifica se passa do limite
+            if [ "$LINHAS" -gt "$LIMITE" ]; then
+                head -n "$LIMITE" "$arquivo"
+                echo -e "\n${AMARELO}... [TRUNCADO] Arquivo muito grande ($LINHAS linhas). Mostrando apenas as primeiras $LIMITE. ...${RESET}"
+            else
+                cat "$arquivo"
+            fi
+            
             echo -e "\n\n"
         else
             echo -e "${VERDE}[PULADO]${RESET} $arquivo (arquivo binário/não-texto)"
